@@ -17,7 +17,7 @@ export class Translation {
     public static async translate(input: ITranslate): Promise<[string, any]> {
         const apiKey = `${process.env.TRANSLATE_API}`;
 
-        if (!apiKey) {
+        if (!apiKey || apiKey === undefined) {
             throw Error('No configured API key');
         }
 
