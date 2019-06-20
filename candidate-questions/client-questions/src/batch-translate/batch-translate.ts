@@ -16,17 +16,19 @@ export class BatchTranslate {
      * @param return A list of the converted strings now in the target language
      */
     public static async batchTranslate(input: IPostRequest): Promise<string[]> {
-        // Note here the requests are being done one by one but with more time I would
-        // implement concurrency using something like Promise.all or the batch npm package
-        // however due to time constrains and issues with the api key this was not added
         if (input.destinationLang !== undefined && input.convert !== undefined) {
-            const result: string[] = [];
+            const calls: Array<Promise<string[]>> = [];
             for (const item of input.convert) {
                 // convert each string in the list then add to the list of results
-                result.push((await this.translateString(input.destinationLang, item))[0]);
+                calls.push(this.translateString(input.destinationLang, item));
+            }
+            const results = await Promise.all(calls);
+            const finalResult: string[] = [];
+            for (const result of results) {
+                finalResult.push(result[0]);
             }
             // sort the results
-            return result.sort();
+            return finalResult.sort();
         }
         // if any params are undefined return undefined
         return undefined;
