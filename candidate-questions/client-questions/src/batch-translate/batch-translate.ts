@@ -19,11 +19,13 @@ export class BatchTranslate {
         if (input.destinationLang !== undefined && input.convert !== undefined) {
             const calls: Array<Promise<string[]>> = [];
             for (const item of input.convert) {
-                // convert each string in the list then add to the list of results
+                // create a list of promises
                 calls.push(this.translateString(input.destinationLang, item));
             }
+            // wait until all promises are resolved
             const results = await Promise.all(calls);
             const finalResult: string[] = [];
+            // convert to a list of strings
             for (const result of results) {
                 finalResult.push(result[0]);
             }
