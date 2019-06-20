@@ -7,7 +7,8 @@ const port = 8080; // default port to listen
 
 app.use(bodyParser.json());
 
-// define a route handler for the default home page
+// define a route handler for the default home page,
+// tries again if the request fails due to the api key not being set the first time
 app.get( '/', async ( resp: any, res: any ) => {
     try {
         const translateInterface: ITranslate = {
@@ -28,7 +29,7 @@ app.get( '/', async ( resp: any, res: any ) => {
 } );
 
 /**
- * Handles the post request
+ * Handles the post request, tries again if the request fails due to the api key not being set the first time
  */
 app.post( '/', async ( resp: any, res: any ) => {
     try {

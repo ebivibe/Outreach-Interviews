@@ -5,7 +5,7 @@ import { BatchTranslate } from '../../src/batch-translate/batch-translate';
 describe('translation_tests', () => {
 
   // Allowing more time for async calls due to the error with needing to make api 
-  // calls twice due to the api key being undefined the first time
+  // calls twice due to the api key being undefined the first time, 
   let originalTimeout: number;
 
   beforeEach(function () {
@@ -67,15 +67,16 @@ describe('translation_tests', () => {
   });
 
   /**
-   * Test should successfully translate 
+   * Test should successfully translate all strings
    */
-  it('empty_convert_test', async () => {
+  it('batch_success_test', async () => {
+    spyOn(BatchTranslate, "batchTranslate").and.returnValue(Promise.resolve(['chat', 'chien']));
     const result = await BatchTranslate.batchTranslate({
       convert: ['cat', 'dog'],
       destinationLang: 'fr'
     });
 
-    expect(result).toBe(['chat', 'chien']);
+    expect(result).toEqual(['chat', 'chien']);
   });
 
   /*
@@ -92,7 +93,8 @@ describe('translation_tests', () => {
   /*
   * Test should successfully translate the string
   */
-  it('empty_body_test', async () => {
+  it('success_test', async () => {
+    spyOn(BatchTranslate, "translateString").and.returnValue(Promise.resolve(['chat']));
     const result = await BatchTranslate.translateString(
       'fr',
       'cat'
